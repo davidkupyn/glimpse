@@ -1,12 +1,11 @@
-<script>
+<script lang="ts">
+	import { fadeScale } from '$lib/utils/fadeScale'
 	import { Chrome, Github } from 'lucide-svelte'
-	import { cubicOut } from 'svelte/easing'
-	import { fly } from 'svelte/transition'
 </script>
 
-<main class="h-screen flex items-center justify-center w-full p-6">
+<main class="h-[calc(100vh-16rem)] flex items-center justify-center w-full p-6">
 	<form
-		in:fly={{ y: 300, duration: 200, easing: cubicOut }}
+		in:fadeScale={{ baseScale: 0.8 }}
 		class="w-full border rounded-3xl border-zinc-900 p-6 grid gap-6 sm:w-96"
 	>
 		<h1 class="text-center font-semibold text-xl">Sign in</h1>
