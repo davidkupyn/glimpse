@@ -1,6 +1,35 @@
 <script lang="ts">
 	import { page } from '$app/stores'
-	import { ChevronLeft } from 'lucide-svelte'
+	import {
+		Check,
+		ChevronLeft,
+		Link,
+		QrCode,
+		Download,
+		ExternalLink,
+		Clipboard
+	} from 'lucide-svelte'
+	import { scale } from 'svelte/transition'
+	import { createMenu } from 'svelte-headlessui'
+	import Transition from 'svelte-transition'
+
+	const qrMenu = createMenu({ label: 'QR Code' })
+	let copiedURL = false
+
+	const qrMenuOptions = [
+		// {
+		// 	label: 'Copy QR Code',
+		// 	icon: Clipboard
+		// },
+		{
+			label: 'Open QR Code',
+			icon: ExternalLink
+		},
+		{
+			label: 'Download QR Code',
+			icon: Download
+		}
+	]
 </script>
 
 <div class="flex gap-6 items-center mb-8">
@@ -12,5 +41,69 @@
 		<ChevronLeft size={20} />
 	</button>
 	<h1 class="text-2xl font-bold md:text-3xl">{$page.params.roomId}</h1>
+	<div class="flex gap-2">
+		<div class="relative">
+			<button
+				use:qrMenu.button
+				aria-label="Go back"
+				class="inline-flex items-center px-2 focus-visible:text-zinc-100 h-9 text-zinc-400 outline-none focus-visible:bg-zinc-900 hover:text-zinc-100 transition-colors text-sm hover:bg-zinc-900 rounded-lg"
+			>
+				<span in:scale>
+					<QrCode size={20} />
+				</span>
+			</button>
+			<Transition
+				show={$qrMenu.expanded}
+				enter="transition ease-out duration-100"
+				enterFrom="transform opacity-0 scale-75"
+				enterTo="transform opacity-100 scale-100"
+				leave="transition ease-in duration-75"
+				leaveFrom="transform opacity-100 scale-100"
+				leaveTo="transform opacity-0 scale-75"
+			>
+				<ul
+					use:qrMenu.items
+					class="absolute -left-24 origin-top md:left-0 md:origin-top-left mt-3 w-56 divide-y divide-zinc-900 rounded-lg border border-zinc-800 bg-zinc-950/50 backdrop-blur-md shadow-lg ring-opacity-5 focus:outline-none"
+				>
+					{#each qrMenuOptions as option (option)}
+						{@const active = $qrMenu.active === option.label}
+						<li class="px-1 py-1">
+							<button
+								use:qrMenu.item
+								class="flex w-full items-center rounded-sm px-2 py-2 text-sm font-medium transition {active
+									? 'bg-zinc-900 text-zinc-50'
+									: 'text-zinc-400'}"
+							>
+								<svelte:component this={option.icon} class="w-5 h-5 mr-3" />
+								{option.label}
+							</button>
+						</li>
+					{/each}
+				</ul>
+			</Transition>
+		</div>
+		<button
+			aria-label="Go back"
+			class="inline-flex items-center px-2 focus-visible:text-zinc-100 h-9 text-zinc-400 outline-none focus-visible:bg-zinc-900 hover:text-zinc-100 transition-colors text-sm hover:bg-zinc-900 rounded-lg"
+			on:click={() => {
+				if (copiedURL) return
+				copiedURL = true
+				navigator.clipboard.writeText($page.url.href)
+				setTimeout(() => {
+					copiedURL = false
+				}, 1000)
+			}}
+		>
+			{#if copiedURL}
+				<span in:scale>
+					<Check class="text-green-500" size={20} />
+				</span>
+			{:else}
+				<span in:scale>
+					<Link size={20} />
+				</span>
+			{/if}
+		</button>
+	</div>
 </div>
 <div class="flex flex-wrap gap-4" />

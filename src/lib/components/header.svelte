@@ -9,7 +9,7 @@
 		: 'sticky top-0 bg-zinc-950/50 backdrop-blur-md'} w-full z-20 border-zinc-900"
 	class:border-b={$page.url.pathname !== '/'}
 >
-	<div class="container mx-auto flex justify-between items-center p-6 h-20">
+	<div class="container mx-auto flex justify-between items-center px-6 py-3.5 md:py-5">
 		<h1 class="text-xl font-bold">
 			<a
 				href="/"

@@ -1,9 +1,20 @@
 <script lang="ts">
 	import { fadeScale } from '$lib/utils/fadeScale'
 	import { Chrome, Github } from 'lucide-svelte'
+
+	const googleWord = [
+		{ letter: 'G', style: 'group-hover:text-blue-500' },
+		{ letter: 'o', style: 'group-hover:text-red-500' },
+		{ letter: 'o', style: 'group-hover:text-yellow-500' },
+		{ letter: 'g', style: 'group-hover:text-blue-500' },
+		{ letter: 'l', style: 'group-hover:text-green-500' },
+		{ letter: 'e', style: 'group-hover:text-red-500' }
+	]
 </script>
 
-<main class="h-[calc(100vh-16rem)] flex items-center justify-center w-full p-6">
+<main
+	class="h-[calc(100vh-10rem)] md:h-[calc(100vh-16rem)] flex items-center justify-center w-full p-6"
+>
 	<form
 		in:fadeScale={{ baseScale: 0.8 }}
 		class="w-full border rounded-3xl border-zinc-900 p-6 grid gap-6 sm:w-96"
@@ -34,7 +45,12 @@
 				class="inline-flex w-full group items-center h-10 py-2 px-4 transition-all text-primary-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none border border-zinc-800 ring-offset-zinc-950 hover:bg-zinc-800"
 			>
 				<Chrome size={20} class="mr-2 w-4 h-4" />
-				Continue with Google
+				Continue with
+				<span class="ml-2 [&>span]:transition">
+					{#each googleWord as { letter, style }}
+						<span class={style}>{letter}</span>
+					{/each}
+				</span>
 			</button>
 			<button
 				class="inline-flex w-full group items-center h-10 py-2 px-4 transition-all text-primary-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none border border-zinc-800 ring-offset-zinc-950 hover:bg-zinc-800"
