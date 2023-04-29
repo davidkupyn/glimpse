@@ -29,7 +29,7 @@
 			</li>
 			<li>
 				<a
-					class="inline-flex group items-center h-10 py-2 px-4 transition-all text-primary-950 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-zinc-950 bg-primary-500 hover:bg-primary-600 hover:text-zinc-950"
+					class="inline-flex group items-center h-10 py-2 px-4 transition-all text-primary-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-zinc-950 bg-primary-600 hover:bg-primary-700"
 					href="/login"
 				>
 					Sign in

@@ -5,7 +5,7 @@
 	import { fade } from 'svelte/transition'
 	// @ts-expect-error
 	import { interpolate } from 'flubber'
-	import { cubicInOut } from 'svelte/easing'
+	import { cubicInOut, cubicOut } from 'svelte/easing'
 
 	const shapes = [
 		'M109.6 -138.1C146.4 -99.8 183.5 -69.3 195.7 -30.1C208 9.2 195.4 57.4 167.1 87.3C138.9 117.3 95.1 129.1 54.5 139.4C13.9 149.7 -23.5 158.5 -61.9 152.3C-100.3 146 -139.8 124.8 -178.9 88.2C-218 51.6 -256.7 -0.2 -246.2 -40.6C-235.7 -80.9 -176 -109.8 -126.8 -146C-77.6 -182.1 -38.8 -225.6 -1.2 -224.1C36.4 -222.7 72.8 -176.5 109.6 -138.1',
@@ -23,7 +23,26 @@
 
 	let interval: number
 	let currentBlobIndex = 0
+
+	function fadeScale(node: Element, { delay = 0, duration = 200, baseScale = 0.9 }) {
+		const o = +getComputedStyle(node).opacity
+		const m = getComputedStyle(node).transform.match(/scale\(([0-9.]+)\)/)
+		const s = m ? Number(m[1]) : 1
+		const is = 1 - baseScale
+
+		return {
+			delay,
+			duration,
+			css: (t: number) => {
+				const eased = cubicOut(t)
+				return `opacity: ${eased * o}; transform: scale(${eased * s * is + baseScale})`
+			}
+		}
+	}
+
+	let mounted = false
 	onMount(() => {
+		mounted = true
 		$shape = shapes[currentBlobIndex + 1]
 		interval = setInterval(() => {
 			currentBlobIndex = (currentBlobIndex + 1) % shapes.length
@@ -36,59 +55,61 @@
 	})
 </script>
 
-<div class="relative h-screen w-full overflow-hidden">
-	<main
-		class="z-10 absolute bg-zinc-950/50 backdrop-blur-xl md:backdrop-blur-2xl p-6 flex flex-col justify-center items-center inset-0 gap-8"
-	>
-		<h1
-			in:fade={{ duration: 200 }}
-			class="text-center text-5xl md:text-7xl font-semibold bg-clip-text text-transparent bg-gradient-to-t from-zinc-300 via-zinc-100 to-zinc-50"
+{#key mounted}
+	<div class="relative h-screen w-full overflow-hidden">
+		<main
+			class="z-10 absolute bg-zinc-950/50 backdrop-blur-xl md:backdrop-blur-2xl p-6 flex flex-col justify-center items-center inset-0 gap-8"
 		>
-			See Tomorrow <span
-				class="bg-clip-text text-transparent bg-gradient-to-r from-primary-400 via-primary-600 to-primary-800"
-				>Now.</span
+			<h1
+				in:fadeScale={{}}
+				class="text-center text-5xl md:text-7xl font-semibold bg-clip-text text-transparent bg-gradient-to-t from-zinc-300 via-zinc-100 to-zinc-50"
 			>
-		</h1>
-		<p
-			in:fade={{ duration: 200 }}
-			class="text-center bg-clip-text text-transparent bg-gradient-to-t from-zinc-400 to-zinc-50 md:text-lg"
-		>
-			Predict the future of the world with Glimpse without waiting for 10 years.
-		</p>
-		<button
-			in:fade={{ duration: 200 }}
-			class="inline-flex group items-center h-10 py-2 px-4 hover:pr-3 transition-all text-primary-950 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-zinc-950 bg-primary-500 hover:bg-primary-600 hover:text-zinc-950"
-		>
-			Get Started
-			<ArrowRight class="w-4 h-4 ml-2 group-hover:ml-3 transition-[margin]" size={16} />
-		</button>
-	</main>
+				See Tomorrow <span
+					class="bg-clip-text text-transparent bg-gradient-to-r from-primary-400 via-primary-600 to-primary-800"
+					>Now.</span
+				>
+			</h1>
+			<p
+				in:fade
+				class="text-center bg-clip-text text-transparent bg-gradient-to-t from-zinc-400 to-zinc-50 md:text-lg"
+			>
+				Predict the future of the world with Glimpse without waiting for 10 years.
+			</p>
+			<button
+				in:fade
+				class="inline-flex group items-center h-10 py-2 px-4 hover:pr-3 transition-all text-primary-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-zinc-950 bg-primary-600 hover:bg-primary-700"
+			>
+				Get Started
+				<ArrowRight class="w-4 h-4 ml-2 group-hover:ml-3 transition-[margin]" size={16} />
+			</button>
+		</main>
 
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		class="absolute right-[10%] top-[90%] translate-x-1/2 -translate-y-1/2"
-		version="1.1"
-		xmlns:xlink="http://www.w3.org/1999/xlink"
-		viewBox="0 0 700 700"
-		><defs
-			><radialGradient id="gradient">
-				<stop offset="0%" style="stop-color:var(--color-primary-400);" />
-				<stop offset="100%" style="stop-color:var(--color-primary-800);" />
-			</radialGradient>
-		</defs>
-		<g transform="translate(350 350)">
-			<path d={$shape} fill="url(#gradient)" />
-		</g>
-	</svg>
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		class="absolute left-[10%] top-[10%] -translate-x-1/2 -translate-y-1/2 -scale-x-100"
-		version="1.1"
-		xmlns:xlink="http://www.w3.org/1999/xlink"
-		viewBox="0 0 1200 1200"
-	>
-		<g transform="translate(600 600)">
-			<path d={$shape} fill="url(#gradient)" />
-		</g>
-	</svg>
-</div>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			class="absolute right-[10%] top-[90%] translate-x-1/2 -translate-y-1/2"
+			version="1.1"
+			xmlns:xlink="http://www.w3.org/1999/xlink"
+			viewBox="0 0 700 700"
+			><defs
+				><radialGradient id="gradient">
+					<stop offset="0%" style="stop-color:var(--color-primary-400);" />
+					<stop offset="100%" style="stop-color:var(--color-primary-800);" />
+				</radialGradient>
+			</defs>
+			<g transform="translate(350 350)">
+				<path d={$shape} fill="url(#gradient)" />
+			</g>
+		</svg>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			class="absolute left-[10%] top-[10%] -translate-x-1/2 -translate-y-1/2 -scale-x-100"
+			version="1.1"
+			xmlns:xlink="http://www.w3.org/1999/xlink"
+			viewBox="0 0 1200 1200"
+		>
+			<g transform="translate(600 600)">
+				<path d={$shape} fill="url(#gradient)" />
+			</g>
+		</svg>
+	</div>
+{/key}

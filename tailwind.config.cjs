@@ -7,7 +7,7 @@ const config = {
 		extend: {
 			colors: {
 				primary: {
-					...colors.amber
+					...colors.rose
 				}
 			}
 		}

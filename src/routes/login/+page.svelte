@@ -1,4 +1,5 @@
 <script>
+	import { Chrome, Github } from 'lucide-svelte'
 	import { cubicOut } from 'svelte/easing'
 	import { fly } from 'svelte/transition'
 </script>
@@ -10,22 +11,41 @@
 	>
 		<h1 class="text-center font-semibold text-xl">Sign in</h1>
 		<input
-			class="hover:ring-primary-500 ring-1 ring-transparent duration-200 focus-within:ring-primary-500 border-0 transition h-10 outline-none placeholder:text-zinc-500 text-sm rounded-lg bg-zinc-900 px-4"
+			class="hover:ring-primary-600 ring-1 ring-transparent duration-200 focus-within:ring-primary-600 border-0 transition h-10 outline-none placeholder:text-zinc-500 text-sm rounded-lg bg-zinc-900 px-4"
 			type="text"
-			placeholder="Username"
+			placeholder="Email address"
 		/>
-		<input
-			class="hover:ring-primary-500 ring-1 ring-transparent duration-200 focus-within:ring-primary-500 border-0 transition h-10 outline-none placeholder:text-zinc-500 text-sm rounded-lg bg-zinc-900 px-4"
+		<!-- <input
+			class="hover:ring-primary-600 ring-1 ring-transparent duration-200 focus-within:ring-primary-600 border-0 transition h-10 outline-none placeholder:text-zinc-500 text-sm rounded-lg bg-zinc-900 px-4"
 			type="password"
 			placeholder="Password"
-		/>
+		/> -->
 		<button
-			class="inline-flex w-full group items-center h-10 py-2 px-4 transition-all text-primary-950 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-zinc-950 bg-primary-500 hover:bg-primary-600 hover:text-zinc-950"
+			class="inline-flex w-full group items-center h-10 py-2 px-4 transition-all text-primary-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-zinc-950 bg-primary-600 hover:bg-primary-700"
 		>
-			Sign in
+			Sign in with email
 		</button>
+		<div class="flex items-center justify-center text-sm gap-3">
+			<span class="bg-zinc-800 h-px w-full" />
+			<span class="text-zinc-400">or</span>
+			<span class="bg-zinc-800 h-px w-full" />
+		</div>
+		<div class="flex flex-col gap-3">
+			<button
+				class="inline-flex w-full group items-center h-10 py-2 px-4 transition-all text-primary-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none border border-zinc-800 ring-offset-zinc-950 hover:bg-zinc-800"
+			>
+				<Chrome size={20} class="mr-2 w-4 h-4" />
+				Continue with Google
+			</button>
+			<button
+				class="inline-flex w-full group items-center h-10 py-2 px-4 transition-all text-primary-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none border border-zinc-800 ring-offset-zinc-950 hover:bg-zinc-800"
+			>
+				<Github size={20} class="mr-2 w-4 h-4" />
+				Continue with GitHub
+			</button>
+		</div>
 		<div class="w-full flex justify-center items-center text-sm gap-2">
-			or
+			Don't have an account?
 			<button
 				class="inline-flex group items-center transition justify-center text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 ring-offset-zinc-950 rounded px-1 disabled:opacity-50 disabled:pointer-events-none"
 			>
