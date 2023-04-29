@@ -85,6 +85,7 @@
 		</main>
 
 		<svg
+			in:fade={{ duration: 150 }}
 			xmlns="http://www.w3.org/2000/svg"
 			class="absolute right-[10%] top-[90%] translate-x-1/2 -translate-y-1/2"
 			version="1.1"
@@ -101,6 +102,7 @@
 			</g>
 		</svg>
 		<svg
+			in:fade={{ duration: 150 }}
 			xmlns="http://www.w3.org/2000/svg"
 			class="absolute left-[10%] top-[10%] -translate-x-1/2 -translate-y-1/2 -scale-x-100"
 			version="1.1"
