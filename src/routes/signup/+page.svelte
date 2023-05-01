@@ -19,7 +19,7 @@
 		in:fadeScale={{ baseScale: 0.8 }}
 		class="w-full border rounded-3xl dark:border-base-900 border-base-300 p-6 grid gap-6 sm:w-96"
 	>
-		<h1 class="text-center font-semibold text-xl">Log in</h1>
+		<h1 class="text-center font-semibold text-xl">Sign up</h1>
 		<input
 			class="hover:ring-primary-500 dark:hover:ring-primary-600 ring-1 ring-transparent duration-200 focus:ring-primary-500 dark:focus:ring-primary-600 border-0 transition h-10 outline-none dark:placeholder:text-base-500 placeholder:text-base-400 text-sm rounded-lg bg-base-200 dark:bg-base-900 px-4"
 			type="text"
@@ -33,7 +33,7 @@
 		<button
 			class="inline-flex w-full group items-center h-10 py-2 px-4 transition-all text-base-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700 ring-offset-base-50 dark:ring-offset-base-950"
 		>
-			Log in with email
+			Sign up
 		</button>
 		<div class="flex items-center justify-center text-sm gap-3">
 			<span class="bg-base-300 dark:bg-base-800 h-px w-full" />
@@ -60,17 +60,17 @@
 			</button>
 		</div>
 		<div class="w-full flex justify-center items-center text-sm gap-1">
-			Don't have an account?
-			<button
+			Already have an account?
+			<a
+				href="/login"
 				class="inline-flex group items-center transition justify-center text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 ring-offset-base-50 dark:ring-offset-base-950 rounded px-1 disabled:opacity-50 disabled:pointer-events-none"
 			>
-				<a
-					href="/signup"
+				<span
 					class="border-b border-opacity-0 border-primary-600 group-hover:border-opacity-100 transition text-primary-500 group-hover:text-primary-600"
 				>
-					Sign up
-				</a>
-			</button>
+					Log in
+				</span>
+			</a>
 		</div>
 	</form>
 </main>

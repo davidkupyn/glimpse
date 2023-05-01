@@ -48,27 +48,27 @@
 {#key mounted}
 	<div class="relative h-screen w-full overflow-hidden">
 		<main
-			class="z-10 absolute bg-zinc-950/50 backdrop-blur-xl md:backdrop-blur-2xl p-6 flex flex-col justify-center items-center inset-0 gap-8"
+			class="z-10 absolute bg-base-50/10 dark:bg-base-950/50 backdrop-blur-xl md:backdrop-blur-2xl p-6 flex flex-col justify-center items-center inset-0 gap-8"
 		>
 			<h1
-				in:fadeScale={{}}
-				class="text-center text-5xl md:text-7xl font-semibold bg-clip-text text-transparent bg-gradient-to-t from-zinc-300 via-zinc-100 to-zinc-50"
+				in:fadeScale={{ duration: 400 }}
+				class="text-center text-5xl md:text-7xl font-semibold bg-clip-text text-transparent bg-gradient-to-t from-base-900 via-base-700 to-base-500 dark:from-base-300 dark:via-base-100 dark:to-base-50"
 			>
 				See Tomorrow <span
-					class="bg-clip-text text-transparent bg-gradient-to-r from-primary-400 via-primary-600 to-primary-800"
+					class="bg-clip-text text-transparent bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 dark:from-primary-400 dark:via-primary-600 dark:to-primary-800"
 					>Now.</span
 				>
 			</h1>
 			<p
-				in:fade
-				class="text-center bg-clip-text text-transparent bg-gradient-to-t from-zinc-400 to-zinc-50 md:text-lg"
+				in:fade={{ duration: 400 }}
+				class="text-center bg-clip-text text-transparent bg-gradient-to-t from-base-700 to-base-400 dark:from-base-400 dark:to-base-50 md:text-lg"
 			>
 				Predict the future of the world with Glimpse without waiting for 10 years.
 			</p>
 			<a
-				in:fade
+				in:fade={{ duration: 400 }}
 				href="/rooms"
-				class="inline-flex group items-center h-10 py-2 px-4 hover:pr-3 transition-all text-primary-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-zinc-950 bg-primary-600 hover:bg-primary-700"
+				class="inline-flex group items-center h-10 py-2 px-4 hover:pr-3 transition-all text-primary-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-base-50 dark:ring-offset-base-950 bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
 			>
 				Get Started
 				<ArrowRight class="w-4 h-4 ml-2 group-hover:ml-3 transition-[margin]" size={16} />

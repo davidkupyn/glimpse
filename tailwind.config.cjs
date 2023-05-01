@@ -8,6 +8,9 @@ const config = {
 			colors: {
 				primary: {
 					...colors.rose
+				},
+				base: {
+					...colors.zinc
 				}
 			}
 		}

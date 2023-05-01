@@ -1,11 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.cdnfonts.com/css/roobert');
 
 @layer {
 	body {
-		@apply bg-zinc-950 min-h-screen text-zinc-50 selection:bg-primary-500/30;
+		@apply bg-base-50 dark:bg-base-950 min-h-screen text-base-800 dark:text-base-50 selection:bg-primary-500/30;
 		overscroll-behavior-y: none;
+		font-family: 'Roobert', sans-serif;
 	}
 }
 
