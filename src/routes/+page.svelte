@@ -1,17 +1,16 @@
 <script lang="ts">
+	import { interpolate } from 'polymorph-js'
 	import { ArrowRight } from 'lucide-svelte'
 	import { onDestroy, onMount } from 'svelte'
 	import { tweened } from 'svelte/motion'
 	import { fade } from 'svelte/transition'
-	// @ts-expect-error
-	import { interpolate } from 'flubber'
 	import { cubicInOut } from 'svelte/easing'
 	import { fadeScale } from '$lib/utils/fadeScale'
 
 	const shapes = [
 		'M109.6 -138.1C146.4 -99.8 183.5 -69.3 195.7 -30.1C208 9.2 195.4 57.4 167.1 87.3C138.9 117.3 95.1 129.1 54.5 139.4C13.9 149.7 -23.5 158.5 -61.9 152.3C-100.3 146 -139.8 124.8 -178.9 88.2C-218 51.6 -256.7 -0.2 -246.2 -40.6C-235.7 -80.9 -176 -109.8 -126.8 -146C-77.6 -182.1 -38.8 -225.6 -1.2 -224.1C36.4 -222.7 72.8 -176.5 109.6 -138.1',
 		'M171 -197C171 -136.3 85.5 -68.2 75.3 33.5C65.1 135.1 130.2 270.3 117.2 297.2C104.3 324 13.3 242.7 -55.1 183.3C-123.6 123.9 -169.5 86.5 -176.9 43.5C-184.3 0.4 -153.1 -48.5 -117.2 -117.3C-81.3 -186.2 -40.7 -275.1 22.4 -293C85.5 -310.8 171 -257.7 171 -197',
-		'M67.9 -120.4C94.4 -102.3 126.9 -97.1 131.1 -79.2C135.2 -61.3 111.1 -30.7 127.9 9.7C144.6 50 202.2 100 194 110.8C185.7 121.7 111.6 93.3 68.3 92C25 90.6 12.5 116.3 -3.7 122.7C-19.8 129 -39.7 116 -70.1 110C-100.6 103.9 -141.7 104.7 -161.2 87.5C-180.8 70.3 -178.9 35.2 -165.2 7.9C-151.5 -19.3 -126 -38.7 -103.1 -50.1C-80.1 -61.5 -59.8 -64.9 -43.1 -88.8C-26.3 -112.6 -13.2 -156.8 3.7 -163.3C20.7 -169.8 41.3 -138.6 67.9 -120.4',
+		'M93.6 -97.1C106.1 -81.1 90.5 -40.5 100.7 10.1C110.8 60.8 146.6 121.6 134.1 148.1C121.6 174.6 60.8 166.8 26 140.8C-8.8 114.8 -17.7 70.7 -38 44.2C-58.3 17.7 -90.2 8.8 -121.1 -30.9C-152 -70.7 -182.1 -141.4 -161.8 -157.4C-141.4 -173.4 -70.7 -134.7 -15.1 -119.6C40.5 -104.5 81.1 -113.1 93.6 -97.1',
 		'M125.8 -172.7C150.4 -129.2 149.1 -77.6 148.2 -33.4C147.3 10.8 146.8 47.7 139.3 99C131.8 150.3 117.2 216.1 82.9 229.1C48.7 242.1 -5.2 202.3 -65.1 180C-124.9 157.7 -190.6 152.9 -229.3 117.2C-268.1 81.5 -279.8 15.1 -267.1 -45.3C-254.3 -105.8 -217.2 -160.1 -168.6 -199.4C-120 -238.7 -60 -262.8 -4.7 -257.2C50.6 -251.6 101.1 -216.2 125.8 -172.7',
 		'M106.2 -203C138.4 -165.3 165.7 -138.4 195.7 -106.4C225.7 -74.3 258.4 -37.2 265 3.8C271.7 44.8 252.3 89.7 231.2 137.2C210.1 184.6 187.3 234.8 148.5 247.9C109.7 260.9 54.8 237 9.8 219.9C-35.2 202.9 -70.3 192.8 -105.8 177.8C-141.3 162.8 -177.2 142.9 -194.6 112.4C-212 82 -211 41 -208.1 1.7C-205.2 -37.7 -200.5 -75.3 -185.1 -109.4C-169.8 -143.5 -143.9 -173.9 -111.3 -211.3C-78.7 -248.8 -39.3 -293.1 -1.2 -291.1C37 -289.1 74 -240.7 106.2 -203',
 		'M48.1 -92.2C62.8 -74.7 75.6 -62.9 85.1 -48.4C94.6 -34 100.8 -17 112.3 6.7C123.9 30.3 140.7 60.7 137.5 85.9C134.2 111.2 110.9 131.4 84.6 149.9C58.3 168.4 29.2 185.2 8.3 170.8C-12.5 156.3 -25 110.6 -68 101.8C-111 93 -184.6 121 -228.3 110.2C-272.1 99.3 -286 49.7 -266.7 11.2C-247.3 -27.3 -194.7 -54.7 -163.9 -88C-133.2 -121.4 -124.3 -160.7 -100.7 -173C-77 -185.4 -38.5 -170.7 -10.9 -151.8C16.7 -132.9 33.3 -109.7 48.1 -92.2',
@@ -22,7 +21,7 @@
 	]
 
 	const shape = tweened(shapes[0], {
-		interpolate,
+		interpolate: (f, t) => interpolate([f, t]),
 		easing: cubicInOut,
 		duration: 3000
 	})
@@ -52,16 +51,16 @@
 		>
 			<h1
 				in:fadeScale={{ duration: 400 }}
-				class="text-center text-5xl md:text-7xl font-semibold bg-clip-text text-transparent bg-gradient-to-t from-base-900 via-base-700 to-base-500 dark:from-base-300 dark:via-base-100 dark:to-base-50"
+				class="text-center text-5xl md:text-7xl font-semibold bg-clip-text text-transparent bg-gradient-to-t from-base-950 via-base-900 to-base-500 dark:from-base-400 dark:via-base-100 dark:to-base-50"
 			>
 				See Tomorrow <span
-					class="bg-clip-text text-transparent bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 dark:from-primary-400 dark:via-primary-600 dark:to-primary-800"
+					class="animate-text bg-clip-text text-transparent bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 dark:from-primary-300 dark:via-primary-500 dark:to-primary-800"
 					>Now.</span
 				>
 			</h1>
 			<p
 				in:fade={{ duration: 400 }}
-				class="text-center bg-clip-text text-transparent bg-gradient-to-t from-base-700 to-base-400 dark:from-base-400 dark:to-base-50 md:text-lg"
+				class="text-center bg-clip-text text-transparent bg-gradient-to-t from-base-700 to-base-500 dark:from-base-400 dark:to-base-50 md:text-lg"
 			>
 				Predict the future of the world with Glimpse without waiting for 10 years.
 			</p>

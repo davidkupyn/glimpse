@@ -10,7 +10,7 @@
 	class:border-b={$page.url.pathname !== '/'}
 >
 	<div class="container mx-auto flex justify-between items-center px-6 py-3.5 md:py-5">
-		<h1 class="text-xl font-bold">
+		<h1 class="text-lg font-bold">
 			<a
 				href="/"
 				aria-label="Go to home page"
@@ -23,7 +23,7 @@
 			alt="TS"
 		/> -->
 		<nav>
-			<ul class="inline-flex gap-6 items-center">
+			<ul class="inline-flex gap-4 sm:gap-6 items-center">
 				<li>
 					<a
 						aria-label="Github Link"
