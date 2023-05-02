@@ -31,7 +31,7 @@
 			const context = qrCanvas.getContext('2d')
 			const cellSize = 6
 			const margin = 12
-			const foregroundColor = '#D4D4D8'
+			const foregroundColor = '#27272A'
 			const backgroundColor = 'transparent'
 			qrCanvas.width = qrModules.length * cellSize + margin * 2
 			qrCanvas.height = qrModules.length * cellSize + margin * 2
@@ -131,11 +131,9 @@
 				>
 					<div
 						use:qrDialog.modal
-						class="grid w-fit gap-8 rounded-2xl border border-base-800 bg-base-950/50 backdrop-blur-md p-8"
+						class="grid w-fit gap-8 rounded-2xl border border-base-300 dark:border-base-800 bg-base-200/50 dark:bg-base-950/50 backdrop-blur-md p-8"
 					>
-						<h2 class=" text-center text-xl font-semibold text-base-300">
-							Scan this QR code to join
-						</h2>
+						<h2 class=" text-center text-xl font-semibold">Scan this QR code to join</h2>
 
 						<canvas bind:this={qrCanvas} class="sm:[&>canvas]:w-64 [&>canvas]:w-52 mx-auto" />
 						<!-- <a
