@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { fadeScale } from '$lib/utils/fadeScale'
-	import { Chrome, Github } from 'lucide-svelte'
+	import { Chrome, Eye, EyeOff, Github } from 'lucide-svelte'
+	import { scale } from 'svelte/transition'
 
 	const googleWord = [
 		{ letter: 'G', style: 'group-hover:text-blue-600 dark:group-hover:text-blue-500' },
@@ -10,6 +11,8 @@
 		{ letter: 'l', style: 'group-hover:text-green-600 dark:group-hover:text-green-500' },
 		{ letter: 'e', style: 'group-hover:text-red-600 dark:group-hover:text-red-500' }
 	]
+
+	let showPassword = false
 </script>
 
 <main
@@ -23,13 +26,35 @@
 		<input
 			class="hover:ring-primary-500 dark:hover:ring-primary-600 ring-1 ring-transparent duration-200 focus:ring-primary-500 dark:focus:ring-primary-600 border-0 transition h-10 outline-none dark:placeholder:text-base-500 placeholder:text-base-400 text-sm rounded-lg bg-base-200 dark:bg-base-900 px-4"
 			type="text"
+			name="email"
 			placeholder="Email address"
 		/>
-		<!-- <input
-			class="hover:ring-primary-600 ring-1 ring-transparent duration-200 focus-within:ring-primary-600 border-0 transition h-10 outline-none placeholder:text-base-500 text-sm rounded-lg bg-base-900 px-4"
-			type="password"
-			placeholder="Password"
-		/> -->
+		<div
+			class="flex items-center hover:ring-primary-500 dark:hover:ring-primary-600 rounded-lg overflow-hidden ring-1 ring-transparent duration-200 focus-within:ring-primary-500 dark:focus-within:ring-primary-600 bg-base-200 dark:bg-base-900 pr-2"
+		>
+			<input
+				class="focus:ring-0 border-0 transition h-10 outline-none dark:placeholder:text-base-500 placeholder:text-base-400 bg-transparent w-full text-sm pl-4 pr-0"
+				type={showPassword ? 'text' : 'password'}
+				name="password"
+				placeholder="Password"
+			/>
+			<button
+				class="p-1 focus-visible:bg-base-300/75 focus-visible:text-base-800 dark:focus-visible:bg-base-800 dark:focus-visible:text-base-200 outline-none rounded text-base-500 dark:text-base-400 hover:text-base-800 dark:hover:text-base-100 transition"
+				on:click|preventDefault={() => {
+					showPassword = !showPassword
+				}}
+			>
+				{#if showPassword}
+					<span in:scale>
+						<Eye size={20} />
+					</span>
+				{:else}
+					<span in:scale>
+						<EyeOff size={20} />
+					</span>
+				{/if}
+			</button>
+		</div>
 		<button
 			class="inline-flex w-full group items-center h-10 py-2 px-4 transition-all text-base-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700 ring-offset-base-50 dark:ring-offset-base-950"
 		>
