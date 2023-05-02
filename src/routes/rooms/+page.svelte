@@ -3,7 +3,7 @@
 	import { DoorOpen, Plus, RefreshCw } from 'lucide-svelte'
 	import { cubicOut } from 'svelte/easing'
 	import { spring } from 'svelte/motion'
-
+	import { tippy } from '$lib/actions/tippy'
 	const rooms = [
 		'Room 1',
 		'Room 2',
@@ -30,9 +30,9 @@
 				$refreshSpinDeg = Math.round($refreshSpinDeg / 360) * 360 + 360 * 1
 			}}
 			class="rounded-lg p-2 text-base-500 dark:text-base-400 dark:hover:text-base-200 hover:text-base-900 outline-none transition dark:focus-visible:text-base-100 dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 focus-visible:text-base-900"
-			style="rotate: {$refreshSpinDeg}deg"
+			use:tippy={{ content: 'Refresh data' }}
 		>
-			<RefreshCw size={20} />
+			<RefreshCw size={20} style="rotate: {$refreshSpinDeg}deg" />
 		</button>
 	</div>
 	<a
