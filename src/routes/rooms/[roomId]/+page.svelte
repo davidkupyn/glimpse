@@ -15,7 +15,9 @@
 	import Transition from 'svelte-transition'
 	import { tippy } from '$lib/actions/tippy'
 
-	const qrModules = qr($page.url.href)
+	const qrModules = qr($page.url.href, {
+		correction: 'M'
+	})
 	let copiedURL = false
 
 	const qrDialog = createDialog({ label: 'QR Code' })
@@ -30,19 +32,23 @@
 
 			const context = qrCanvas.getContext('2d')
 			const cellSize = 6
-			const margin = 12
-			const foregroundColor = '#27272A'
-			const backgroundColor = 'transparent'
-			qrCanvas.width = qrModules.length * cellSize + margin * 2
-			qrCanvas.height = qrModules.length * cellSize + margin * 2
+			const padding = 28
+			const foregroundColor = '#27272a'
+			const backgroundColor = '#fafafa'
+			qrCanvas.width = qrModules.length * cellSize + padding * 2
+			qrCanvas.height = qrModules.length * cellSize + padding * 2
 
+			if (context) {
+				context.fillStyle = backgroundColor
+				context.fillRect(0, 0, qrCanvas.width, qrCanvas.height)
+			}
 			qrModules.forEach((row, rowIndex) => {
 				row.forEach((module, colIndex) => {
 					if (context) {
 						context.fillStyle = module ? foregroundColor : backgroundColor
 						context.fillRect(
-							margin + colIndex * cellSize,
-							margin + rowIndex * cellSize,
+							padding + colIndex * cellSize,
+							padding + rowIndex * cellSize,
 							cellSize,
 							cellSize
 						)
@@ -116,7 +122,7 @@
 			leaveTo="opacity-0"
 		>
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div class="fixed inset-0 bg-base-950/60" on:click={qrDialog.close} />
+			<div class="fixed inset-0 bg-base-800/40 dark:bg-base-950/60" on:click={qrDialog.close} />
 		</Transition>
 
 		<div class="fixed inset-0 overflow-y-auto">
@@ -135,7 +141,10 @@
 					>
 						<h2 class=" text-center text-xl font-semibold">Scan this QR code to join</h2>
 
-						<canvas bind:this={qrCanvas} class="sm:[&>canvas]:w-64 [&>canvas]:w-52 mx-auto" />
+						<canvas
+							bind:this={qrCanvas}
+							class="sm:[&>canvas]:w-64 [&>canvas]:w-52 mx-auto rounded-xl"
+						/>
 						<!-- <a
 							href={dataURL}
 							download="{$page.params.roomId.toLowerCase()}-qr-code.png"

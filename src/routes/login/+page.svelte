@@ -86,16 +86,16 @@
 		</div>
 		<div class="w-full flex justify-center items-center text-sm gap-1">
 			Don't have an account?
-			<button
+			<a
+				href="/signup"
 				class="inline-flex group items-center transition justify-center text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 ring-offset-base-50 dark:ring-offset-base-950 rounded px-1 disabled:opacity-50 disabled:pointer-events-none"
 			>
-				<a
-					href="/signup"
+				<span
 					class="border-b border-opacity-0 border-primary-600 group-hover:border-opacity-100 transition text-primary-500 group-hover:text-primary-600"
 				>
 					Sign up
-				</a>
-			</button>
+				</span>
+			</a>
 		</div>
 	</form>
 </main>

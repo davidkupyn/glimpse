@@ -45,7 +45,7 @@
 				<span class="max-sm:hidden bg-base-300 dark:bg-base-800 w-px h-6" />
 				<li>
 					<a
-						class="inline-flex items-center focus-visible:text-base-900 dark:focus-visible:text-base-100 justify-center dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 rounded-lg h-9 px-3 outline-none transition text-base-500 dark:text-base-400 dark:hover:text-base-100 hover:text-base-900 text-sm"
+						class="inline-flex items-center focus-visible:text-base-900 dark:focus-visible:text-base-100 justify-center font-medium dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 rounded-lg h-9 px-3 outline-none transition text-base-500 dark:text-base-400 dark:hover:text-base-100 hover:text-base-900 text-sm"
 						href="/login"
 						>Log in
 					</a>
