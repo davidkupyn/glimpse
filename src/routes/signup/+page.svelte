@@ -1,7 +1,15 @@
 <script lang="ts">
+	import { applyAction, enhance } from '$app/forms'
 	import { scale } from 'svelte/transition'
 	import { fadeScale } from '$lib/utils/fadeScale'
 	import { Chrome, Github, Eye, EyeOff } from 'lucide-svelte'
+	import { superForm } from 'sveltekit-superforms/client'
+	import { onMount } from 'svelte'
+	import { pb } from '$lib/pocketbase.js'
+
+	export let data
+
+	const { form } = superForm(data.form)
 
 	const googleWord = [
 		{ letter: 'G', style: 'group-hover:text-blue-600 dark:group-hover:text-blue-500' },
@@ -13,13 +21,28 @@
 	]
 
 	let showPassword = false
+	let passwordInput: HTMLInputElement
+	let mounted = false
+	onMount(() => {
+		mounted = true
+	})
+	$: {
+		if (mounted) passwordInput.type = showPassword ? 'text' : 'password'
+	}
 </script>
 
 <main
 	class="h-[calc(100vh-6rem)] md:h-[calc(100vh-16rem)] flex items-center justify-center w-full p-6"
 >
 	<form
+		method="POST"
 		in:fadeScale={{ baseScale: 0.8 }}
+		use:enhance={() => {
+			return async ({ result }) => {
+				pb.authStore.loadFromCookie(document.cookie)
+				await applyAction(result)
+			}
+		}}
 		class="w-full border rounded-3xl dark:border-base-900 border-base-300 p-6 grid gap-6 sm:w-96"
 	>
 		<h1 class="text-center font-semibold text-xl">Sign up</h1>
@@ -27,6 +50,7 @@
 			class="hover:ring-primary-500 dark:hover:ring-primary-600 ring-1 ring-transparent duration-200 focus:ring-primary-500 dark:focus:ring-primary-600 border-0 transition h-10 outline-none dark:placeholder:text-base-500 placeholder:text-base-400 text-sm rounded-lg bg-base-200 dark:bg-base-900 px-4"
 			type="text"
 			name="email"
+			bind:value={$form.email}
 			placeholder="Email address"
 		/>
 		<div
@@ -34,13 +58,15 @@
 		>
 			<input
 				class="focus:ring-0 border-0 transition h-10 outline-none dark:placeholder:text-base-500 placeholder:text-base-400 bg-transparent w-full text-sm pl-4 pr-0"
-				type={showPassword ? 'text' : 'password'}
+				bind:this={passwordInput}
+				bind:value={$form.password}
 				name="password"
 				placeholder="Password"
 			/>
 			<button
+				type="button"
 				class="p-1 focus-visible:bg-base-300/75 focus-visible:text-base-800 dark:focus-visible:bg-base-800 dark:focus-visible:text-base-200 outline-none rounded text-base-500 dark:text-base-400 hover:text-base-800 dark:hover:text-base-100 transition"
-				on:click|preventDefault={() => {
+				on:click={() => {
 					showPassword = !showPassword
 				}}
 			>
@@ -56,6 +82,7 @@
 			</button>
 		</div>
 		<button
+			type="submit"
 			class="inline-flex w-full group items-center h-10 py-2 px-4 transition-all text-base-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700 ring-offset-base-50 dark:ring-offset-base-950"
 		>
 			Sign up
@@ -67,6 +94,7 @@
 		</div>
 		<div class="flex flex-col gap-3">
 			<button
+				on:click={() => pb.collection('users').authWithOAuth2({ provider: 'google' })}
 				class="inline-flex w-full group items-center h-10 py-2 px-4 transition-all justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none border border-base-300 dark:border-base-800 ring-offset-base-50 dark:ring-offset-base-950 hover:bg-base-200 dark:hover:bg-base-800"
 			>
 				<Chrome size={20} class="mr-2 w-4 h-4" />

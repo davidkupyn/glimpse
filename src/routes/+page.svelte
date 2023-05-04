@@ -26,7 +26,7 @@
 		duration: 3000
 	})
 
-	let interval: NodeJS.Timer
+	let interval: number
 	let currentBlobIndex = 0
 
 	let mounted = false
@@ -67,7 +67,7 @@
 			<a
 				in:fade={{ duration: 400 }}
 				href="/rooms"
-				class="inline-flex group items-center h-10 py-2 px-4 hover:pr-3 transition-all text-primary-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-base-50 dark:ring-offset-base-950 bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
+				class="inline-flex group items-center h-10 py-2 px-4 hover:pr-3 transition-all text-base-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-base-50 dark:ring-offset-base-950 bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
 			>
 				Get Started
 				<ArrowRight class="w-4 h-4 ml-2 group-hover:ml-3 transition-[margin]" size={16} />

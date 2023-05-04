@@ -1,21 +1,15 @@
 <script lang="ts">
 	import { page } from '$app/stores'
-	import {
-		Check,
-		ChevronLeft,
-		Link,
-		QrCode as QrCodeIcon,
-		Download,
-		ExternalLink,
-		Clipboard
-	} from 'lucide-svelte'
+	import { Check, ChevronLeft, Link, QrCode as QrCodeIcon } from 'lucide-svelte'
 	import { scale } from 'svelte/transition'
 	import { createDialog } from 'svelte-headlessui'
 	import { qr } from '$lib/utils/qr-generator'
 	import Transition from 'svelte-transition'
 	import { tippy } from '$lib/actions/tippy'
 
-	const qrModules = qr($page.url.href)
+	const qrModules = qr($page.url.href, {
+		correction: 'M'
+	})
 	let copiedURL = false
 
 	const qrDialog = createDialog({ label: 'QR Code' })
@@ -30,19 +24,23 @@
 
 			const context = qrCanvas.getContext('2d')
 			const cellSize = 6
-			const margin = 12
-			const foregroundColor = '#27272A'
-			const backgroundColor = 'transparent'
-			qrCanvas.width = qrModules.length * cellSize + margin * 2
-			qrCanvas.height = qrModules.length * cellSize + margin * 2
+			const padding = 28
+			const foregroundColor = '#27272a'
+			const backgroundColor = '#fafafa'
+			qrCanvas.width = qrModules.length * cellSize + padding * 2
+			qrCanvas.height = qrModules.length * cellSize + padding * 2
 
+			if (context) {
+				context.fillStyle = backgroundColor
+				context.fillRect(0, 0, qrCanvas.width, qrCanvas.height)
+			}
 			qrModules.forEach((row, rowIndex) => {
 				row.forEach((module, colIndex) => {
 					if (context) {
 						context.fillStyle = module ? foregroundColor : backgroundColor
 						context.fillRect(
-							margin + colIndex * cellSize,
-							margin + rowIndex * cellSize,
+							padding + colIndex * cellSize,
+							padding + rowIndex * cellSize,
 							cellSize,
 							cellSize
 						)
@@ -58,7 +56,7 @@
 <div class="flex gap-6 items-center mb-6 md:mb-8">
 	<button
 		aria-label="Go back"
-		use:tippy={{ content: 'Go back', delay: 500 }}
+		use:tippy={{ content: 'Go back', delay: 500, placement: 'bottom' }}
 		class="inline-flex items-center p-2 focus-visible:text-base-900 dark:focus-visible:text-base-100 text-base-500 dark:text-base-400 justify-center dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 outline-none hover:text-base-800 dark:hover:text-base-100 transition-colors text-sm hover:bg-base-200/50 dark:hover:bg-base-900 rounded-lg"
 		on:click={() => window.history.back()}
 	>
@@ -69,7 +67,7 @@
 		<div class="relative">
 			<button
 				on:click={qrDialog.open}
-				use:tippy={{ content: 'Show QR Code' }}
+				use:tippy={{ content: 'Show QR Code', placement: 'bottom' }}
 				aria-label="Go back"
 				class="inline-flex items-center p-2 focus-visible:text-base-900 dark:focus-visible:text-base-100 text-base-500 dark:text-base-400 justify-center dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 outline-none hover:text-base-800 dark:hover:text-base-100 transition-colors text-sm hover:bg-base-200/50 dark:hover:bg-base-900 rounded-lg"
 			>
@@ -80,7 +78,7 @@
 		</div>
 		<button
 			aria-label="Copy URL"
-			use:tippy={{ content: 'Copy URL' }}
+			use:tippy={{ content: 'Copy URL', placement: 'bottom' }}
 			class="inline-flex items-center p-2 focus-visible:text-base-900 dark:focus-visible:text-base-100 text-base-500 dark:text-base-400 justify-center dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 outline-none hover:text-base-800 dark:hover:text-base-100 transition-colors text-sm hover:bg-base-200/50 dark:hover:bg-base-900 rounded-lg"
 			on:click={() => {
 				if (copiedURL) return
@@ -116,7 +114,7 @@
 			leaveTo="opacity-0"
 		>
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div class="fixed inset-0 bg-base-950/60" on:click={qrDialog.close} />
+			<div class="fixed inset-0 bg-base-800/40 dark:bg-base-950/60" on:click={qrDialog.close} />
 		</Transition>
 
 		<div class="fixed inset-0 overflow-y-auto">
@@ -131,21 +129,18 @@
 				>
 					<div
 						use:qrDialog.modal
-						class="grid w-fit gap-8 rounded-2xl border border-base-300 dark:border-base-800 bg-base-200/50 dark:bg-base-950/50 backdrop-blur-md p-8"
+						class="grid w-fit gap-8 rounded-2xl border border-base-300 dark:border-base-800 bg-base-100/75 dark:bg-base-950/75 backdrop-blur-md p-8"
 					>
 						<h2 class=" text-center text-xl font-semibold">Scan this QR code to join</h2>
 
-						<canvas bind:this={qrCanvas} class="sm:[&>canvas]:w-64 [&>canvas]:w-52 mx-auto" />
-						<!-- <a
-							href={dataURL}
-							download="{$page.params.roomId.toLowerCase()}-qr-code.png"
-							class="inline-flex items-center h-10 py-2 group px-4 transition-all text-base-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-base-50 dark:ring-offset-base-950 bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
-						>
-							Download
-						</a> -->
+						<canvas
+							bind:this={qrCanvas}
+							class="sm:[&>canvas]:w-64 [&>canvas]:w-52 mx-auto rounded-xl"
+						/>
+
 						<button
 							on:click={qrDialog.close}
-							class="inline-flex items-center h-10 py-2 group px-4 transition-all text-base-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-base-50 dark:ring-offset-base-950 bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
+							class="inline-flex items-center h-10 py-2 group px-4 transition-all text-base-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-base-100 dark:ring-offset-base-950 bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
 						>
 							Done
 						</button>
