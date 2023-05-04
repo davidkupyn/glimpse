@@ -9,7 +9,7 @@
 
 	export let data
 
-	const { form } = superForm(data.form)
+	const { form, errors } = superForm(data.form)
 
 	const googleWord = [
 		{ letter: 'G', style: 'group-hover:text-blue-600 dark:group-hover:text-blue-500' },
@@ -46,41 +46,53 @@
 		class="w-full border rounded-3xl dark:border-base-900 border-base-300 p-6 grid gap-6 sm:w-96"
 	>
 		<h1 class="text-center font-semibold text-xl">Sign up</h1>
-		<input
-			class="hover:ring-primary-500 dark:hover:ring-primary-600 ring-1 ring-transparent duration-200 focus:ring-primary-500 dark:focus:ring-primary-600 border-0 transition h-10 outline-none dark:placeholder:text-base-500 placeholder:text-base-400 text-sm rounded-lg bg-base-200 dark:bg-base-900 px-4"
-			type="text"
-			name="email"
-			bind:value={$form.email}
-			placeholder="Email address"
-		/>
-		<div
-			class="flex items-center hover:ring-primary-500 dark:hover:ring-primary-600 rounded-lg overflow-hidden ring-1 ring-transparent duration-200 focus-within:ring-primary-500 dark:focus-within:ring-primary-600 bg-base-200 dark:bg-base-900 pr-2"
-		>
+		<fieldset class="grid gap-1">
 			<input
-				class="focus:ring-0 border-0 transition h-10 outline-none dark:placeholder:text-base-500 placeholder:text-base-400 bg-transparent w-full text-sm pl-4 pr-0"
-				bind:this={passwordInput}
-				bind:value={$form.password}
-				name="password"
-				placeholder="Password"
+				class="hover:ring-primary-500 data-[invalid]:ring-red-500 dark:hover:ring-primary-600 ring-1 ring-transparent duration-200 focus:ring-primary-500 dark:focus:ring-primary-600 border-0 transition h-10 outline-none dark:placeholder:text-base-500 placeholder:text-base-400 text-sm rounded-lg bg-base-200 dark:bg-base-900 px-4"
+				type="text"
+				name="email"
+				bind:value={$form.email}
+				data-invalid={$errors.email}
+				placeholder="Email address"
 			/>
-			<button
-				type="button"
-				class="p-1 focus-visible:bg-base-300/75 focus-visible:text-base-800 dark:focus-visible:bg-base-800 dark:focus-visible:text-base-200 outline-none rounded text-base-500 dark:text-base-400 hover:text-base-800 dark:hover:text-base-100 transition"
-				on:click={() => {
-					showPassword = !showPassword
-				}}
+			{#if $errors.email}
+				<small class="text-red-500">{$errors.email}</small>
+			{/if}
+		</fieldset>
+		<fieldset class="grid gap-1">
+			<div
+				class="flex items-center data-[invalid]:ring-red-500 hover:ring-primary-500 dark:hover:ring-primary-600 rounded-lg overflow-hidden ring-1 ring-transparent duration-200 focus-within:ring-primary-500 dark:focus-within:ring-primary-600 bg-base-200 dark:bg-base-900 pr-2"
+				data-invalid={$errors.password}
 			>
-				{#if showPassword}
-					<span in:scale>
-						<Eye size={20} />
-					</span>
-				{:else}
-					<span in:scale>
-						<EyeOff size={20} />
-					</span>
-				{/if}
-			</button>
-		</div>
+				<input
+					class="focus:ring-0 border-0 transition h-10 outline-none dark:placeholder:text-base-500 placeholder:text-base-400 bg-transparent w-full text-sm pl-4 pr-0"
+					bind:this={passwordInput}
+					bind:value={$form.password}
+					name="password"
+					placeholder="Password"
+				/>
+				<button
+					type="button"
+					class="p-1 focus-visible:bg-base-300/75 focus-visible:text-base-800 dark:focus-visible:bg-base-800 dark:focus-visible:text-base-200 outline-none rounded text-base-500 dark:text-base-400 hover:text-base-800 dark:hover:text-base-100 transition"
+					on:click={() => {
+						showPassword = !showPassword
+					}}
+				>
+					{#if showPassword}
+						<span in:scale>
+							<Eye size={20} />
+						</span>
+					{:else}
+						<span in:scale>
+							<EyeOff size={20} />
+						</span>
+					{/if}
+				</button>
+			</div>
+			{#if $errors.password}
+				<small class="text-red-500">{$errors.password}</small>
+			{/if}
+		</fieldset>
 		<button
 			type="submit"
 			class="inline-flex w-full group items-center h-10 py-2 px-4 transition-all text-base-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700 ring-offset-base-50 dark:ring-offset-base-950"

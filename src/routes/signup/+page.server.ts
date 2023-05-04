@@ -1,5 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit'
-import { superValidate } from 'sveltekit-superforms/server'
+import { setError, superValidate } from 'sveltekit-superforms/server'
 import { z } from 'zod'
 
 const schema = z.object({
@@ -34,7 +34,7 @@ export const actions = {
 			await locals.pb.collection('users').authWithPassword(form.data.email, form.data.password)
 		} catch (error) {
 			console.error(error)
-			throw error
+			return setError(form, 'email', 'User already exists')
 		}
 
 		throw redirect(303, '/rooms')
