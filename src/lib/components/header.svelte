@@ -1,6 +1,10 @@
 <script>
+	import { scale } from 'svelte/transition'
+	import { applyAction, enhance } from '$app/forms'
 	import { page } from '$app/stores'
-	import { Github } from 'lucide-svelte'
+	import { currentUser, pb } from '$lib/pocketbase'
+	import { Github, LogOut } from 'lucide-svelte'
+	import { cubicOut } from 'svelte/easing'
 </script>
 
 <header
@@ -18,10 +22,7 @@
 				>Glimpse</a
 			>
 		</h1>
-		<!-- <img
-			src="https://api.dicebear.com/6.x/bottts-neutral/svg?radius=50&size=36&backgroundColor=e11d48&seed=roman@gmail.com"
-			alt="TS"
-		/> -->
+
 		<nav>
 			<ul class="inline-flex gap-4 sm:gap-6 items-center">
 				<li>
@@ -34,30 +35,68 @@
 						<Github size={20} />
 					</a>
 				</li>
-				<!-- <span class="max-sm:hidden bg-base-800 w-px h-6" />
-				<li>
-					<a
-						class="inline-flex items-center focus-visible:text-base-900 dark:focus-visible:text-base-100 justify-center max-sm:hidden focus-visible:bg-base-900 rounded-lg h-9 px-3 outline-none transition text-base-400 hover:text-base-100 text-sm"
-						href="/"
-						>About
-					</a>
-				</li> -->
 				<span class="max-sm:hidden bg-base-300 dark:bg-base-800 w-px h-6" />
-				<li>
-					<a
-						class="inline-flex items-center focus-visible:text-base-900 dark:focus-visible:text-base-100 justify-center font-medium dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 rounded-lg h-9 px-3 outline-none transition text-base-500 dark:text-base-400 dark:hover:text-base-100 hover:text-base-900 text-sm"
-						href="/login"
-						>Log in
-					</a>
-				</li>
-				<li>
-					<a
-						class="inline-flex group items-center h-9 px-3 transition-all text-base-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-base-50 dark:ring-offset-base-950 bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
-						href="/signup"
-					>
-						Sign up
-					</a>
-				</li>
+				{#if $currentUser}
+					<li>
+						<a
+							in:scale={{ duration: 300, easing: cubicOut }}
+							class="inline-flex items-center focus-visible:text-base-900 dark:focus-visible:text-base-100 justify-center font-medium dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 rounded-lg h-9 px-3 outline-none transition text-base-500 dark:text-base-400 dark:hover:text-base-100 hover:text-base-900 text-sm"
+							href="/rooms	"
+						>
+							<span
+								class="transition-all border-b border-base-900 dark:border-base-300 border-opacity-0
+								{$page.url.pathname.startsWith('/rooms') &&
+									'border-opacity-100 text-base-900 dark:border-base-100 dark:text-base-100 font-semibold'}"
+							>
+								Rooms
+							</span>
+						</a>
+					</li>
+					<li>
+						<form
+							method="POST"
+							action="/logout"
+							use:enhance={() => {
+								return async ({ result }) => {
+									pb.authStore.clear()
+									await applyAction(result)
+								}
+							}}
+						>
+							<button
+								in:scale={{ duration: 300, easing: cubicOut }}
+								class="inline-flex items-center focus-visible:text-base-900 border-b border-base-100 border-opacity-0 dark:focus-visible:text-base-100 justify-center font-medium dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 rounded-lg h-9 px-3 outline-none transition text-base-500 dark:text-base-400 dark:hover:text-base-100 hover:text-base-900 text-sm"
+							>
+								Log out
+							</button>
+						</form>
+					</li>
+					<li>
+						<img
+							in:scale={{ duration: 300, easing: cubicOut }}
+							src="https://api.dicebear.com/6.x/bottts-neutral/svg?radius=50&size=36&backgroundColor=e11d48&seed={$currentUser.username}"
+							alt="TS"
+						/>
+					</li>
+				{:else}
+					<li>
+						<a
+							in:scale={{ duration: 300, easing: cubicOut }}
+							class="inline-flex border-b border-base-100 border-opacity-0 items-center focus-visible:text-base-900 dark:focus-visible:text-base-100 justify-center font-medium dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 rounded-lg h-9 px-3 outline-none transition text-base-500 dark:text-base-400 dark:hover:text-base-100 hover:text-base-900 text-sm"
+							href="/login"
+							>Log in
+						</a>
+					</li>
+					<li>
+						<a
+							in:scale={{ duration: 300, easing: cubicOut }}
+							class="inline-flex group items-center h-9 px-3 transition-all border-b border-base-100 border-opacity-0 text-base-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-base-50 dark:ring-offset-base-950 bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
+							href="/signup"
+						>
+							Sign up
+						</a>
+					</li>
+				{/if}
 			</ul>
 		</nav>
 	</div>
