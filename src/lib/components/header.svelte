@@ -3,8 +3,11 @@
 	import { applyAction, enhance } from '$app/forms'
 	import { page } from '$app/stores'
 	import { currentUser, pb } from '$lib/pocketbase'
-	import { Github, LogOut } from 'lucide-svelte'
+	import { Github } from 'lucide-svelte'
 	import { cubicOut } from 'svelte/easing'
+
+	// const styles = getComputedStyle(document.documentElement)
+	const bgColor = 'E11D48'
 </script>
 
 <header
@@ -44,9 +47,9 @@
 							href="/rooms	"
 						>
 							<span
-								class="transition-all border-b border-base-900 dark:border-base-300 border-opacity-0
+								class="transition-all border-b border-base-900 dark:border-base-300 border-opacity-0 dark:border-opacity-0
 								{$page.url.pathname.startsWith('/rooms') &&
-									'border-opacity-100 text-base-900 dark:border-base-100 dark:text-base-100 font-semibold'}"
+									'border-opacity-100 dark:border-opacity-100 text-base-900 dark:text-base-100 font-semibold'}"
 							>
 								Rooms
 							</span>
@@ -74,7 +77,7 @@
 					<li>
 						<img
 							in:scale={{ duration: 300, easing: cubicOut }}
-							src="https://api.dicebear.com/6.x/bottts-neutral/svg?radius=50&size=36&backgroundColor=e11d48&seed={$currentUser.username}"
+							src="https://api.dicebear.com/6.x/bottts-neutral/svg?radius=50&size=36&backgroundColor={bgColor}&seed={$currentUser.username}"
 							alt="TS"
 						/>
 					</li>
