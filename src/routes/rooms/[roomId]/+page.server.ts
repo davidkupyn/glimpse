@@ -9,7 +9,8 @@ const schema = z.object({
 
 const joinSchema = z.object({})
 
-export const load = async ({ locals, params, url }) => {
+export const load = async ({ locals, params, url, depends }) => {
+	depends('room')
 	const form = await superValidate(schema)
 	const joinForm = await superValidate(joinSchema)
 	const leaveForm = await superValidate(joinSchema)

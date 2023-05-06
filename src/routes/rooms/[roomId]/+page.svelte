@@ -122,6 +122,7 @@
 				</span>
 			{/if}
 		</button>
+		<span>{data.room.participants.length}</span>
 	</div>
 	{#if !data.room.started && data.room.creator === $currentUser?.id}
 		<form
