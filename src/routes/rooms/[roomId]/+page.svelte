@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/stores'
-	import { Check, ChevronLeft, Link, QrCode as QrCodeIcon } from 'lucide-svelte'
+	import { Check, ChevronLeft, Link, Play, QrCode as QrCodeIcon } from 'lucide-svelte'
 	import { fly, scale } from 'svelte/transition'
 	import { createDialog } from 'svelte-headlessui'
 	import { qr } from '$lib/utils/qr-generator'
 	import Transition from 'svelte-transition'
 	import { tippy } from '$lib/actions/tippy'
 	import { onMount } from 'svelte'
-	import { pb } from '$lib/pocketbase.js'
+	import { currentUser, pb } from '$lib/pocketbase.js'
 	import { invalidate } from '$app/navigation'
 	import { superForm } from 'sveltekit-superforms/client'
 	import { flip } from 'svelte/animate'
@@ -20,6 +20,9 @@
 		taintedMessage: null
 	})
 	const { enhance: leaveEnhance } = superForm(data.leaveForm, {
+		taintedMessage: null
+	})
+	const { enhance: startEnhance } = superForm(data.startForm, {
 		taintedMessage: null
 	})
 
@@ -37,7 +40,7 @@
 				correction: 'M'
 			})
 			const context = qrCanvas.getContext('2d')
-			const cellSize = data?.room?.private ? 4 : 6
+			const cellSize = data.room.private && data.room.creator !== $currentUser?.id ? 4 : 6
 			const padding = 24
 			const foregroundColor = '#27272a'
 			const backgroundColor = '#fafafa'
@@ -84,7 +87,7 @@
 	>
 		<ChevronLeft size={20} />
 	</a>
-	<h1 class="text-2xl font-bold md:text-3xl">{data.room?.title || 'Not found'}</h1>
+	<h1 class="text-2xl font-bold md:text-3xl">{data.room?.title}</h1>
 	<div class="flex gap-2">
 		<div class="relative">
 			<button
@@ -122,9 +125,25 @@
 			{/if}
 		</button>
 	</div>
+	{#if !data.room.started && data.room.creator === $currentUser?.id}
+		<form
+			transition:scale|local={{ duration: 150, easing: cubicOut }}
+			method="POST"
+			action="?/start"
+			class="ml-auto"
+			use:startEnhance
+		>
+			<button
+				class="max-sm:hidden inline-flex items-center h-10 py-2 group px-4 transition-all text-base-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-base-50 dark:ring-offset-base-950 bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
+			>
+				<Play class="w-4 h-4 mr-2 transition" size={16} />
+				Start voting
+			</button>
+		</form>
+	{/if}
 </div>
 <div class="flex flex-col md:flex-row gap-12">
-	{#if data.joined && !data.enteredOption}
+	{#if data.joined && !data.enteredOption && !data.room.started}
 		<div
 			class="grid gap-3 w-full"
 			transition:fly|local={{ x: -200, easing: cubicOut, duration: 150 }}
@@ -200,7 +219,7 @@
 			<p class="w-full text-center my-8 font-medium">No options yet</p>
 		{/if}
 
-		{#if !data.joined}
+		{#if !data.joined && !data.room.started}
 			<form action="?/join" method="POST" use:joinEnhance class="mt-9 mx-auto w-full sm:w-64">
 				<button
 					in:scale|local={{ delay: 200, duration: 150, easing: cubicOut }}
@@ -260,3 +279,20 @@
 		</div>
 	</Transition>
 </div>
+
+{#if !data.room.started && data.room.creator === $currentUser?.id}
+	<form
+		transition:scale|local={{ duration: 150, easing: cubicOut }}
+		method="POST"
+		action="?/start"
+		class="ml-auto"
+		use:startEnhance
+	>
+		<button
+			class="fixed bottom-6 right-6 ease-out transition-all z-20 h-14 w-14 rounded-full bg-primary-500/80 dark:bg-primary-600/80 text-base-50 backdrop-blur-sm shadow-xl grid place-items-center sm:hidden"
+			use:tippy={{ content: 'Create a room', placement: 'left' }}
+		>
+			<Play class="ml-1" size={20} />
+		</button>
+	</form>
+{/if}

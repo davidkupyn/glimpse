@@ -26,7 +26,7 @@
 		duration: 3000
 	})
 
-	let interval: number
+	let interval: NodeJS.Timer
 	let currentBlobIndex = 0
 
 	let mounted = false

@@ -30,7 +30,7 @@ const config = {
 			}
 		}
 	},
-	plugins: [require('@tailwindcss/container-queries'), require('@tailwindcss/forms')]
+	plugins: [require('@tailwindcss/forms')]
 }
 
 module.exports = config

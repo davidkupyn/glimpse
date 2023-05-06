@@ -7,7 +7,7 @@
 	import { cubicOut } from 'svelte/easing'
 
 	// const styles = getComputedStyle(document.documentElement)
-	const bgColor = 'E11D48'
+	const bgColor = 'transparent'
 </script>
 
 <header
@@ -77,7 +77,8 @@
 					<li>
 						<img
 							in:scale={{ duration: 300, easing: cubicOut }}
-							src="https://api.dicebear.com/6.x/bottts-neutral/svg?radius=50&size=36&backgroundColor={bgColor}&seed={$currentUser.username}"
+							class="rounded-full bg-primary-500 dark:bg-primary-600 hover:bg-primary-600 dark:hover:bg-primary-700 transition"
+							src="https://api.dicebear.com/6.x/bottts-neutral/svg?radius=50&size=36&backgroundColor=transparent&seed={$currentUser.username}"
 							alt="TS"
 						/>
 					</li>

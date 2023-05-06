@@ -36,7 +36,6 @@
 </script>
 
 <a
-	type="button"
 	aria-label="Go back"
 	class="inline-flex mb-6 md:mb-8 items-center px-3 h-9 focus-visible:text-base-900 dark:focus-visible:text-base-100 text-base-500 dark:text-base-400 justify-center dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 outline-none hover:text-base-800 dark:hover:text-base-100 transition-colors text-sm hover:bg-base-200/50 dark:hover:bg-base-900 rounded-lg"
 	href="/rooms"

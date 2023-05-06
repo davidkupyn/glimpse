@@ -38,7 +38,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@tailwindcss/container-queries": "^0.1.1",
 		"bcrypt": "^5.1.0",
 		"headless-qr": "^1.0.3",
 		"lucide-svelte": "^0.187.0",
