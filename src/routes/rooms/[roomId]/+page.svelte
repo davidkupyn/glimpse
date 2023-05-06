@@ -281,13 +281,7 @@
 </div>
 
 {#if !data.room.started && data.room.creator === $currentUser?.id}
-	<form
-		transition:scale|local={{ duration: 150, easing: cubicOut }}
-		method="POST"
-		action="?/start"
-		class="ml-auto"
-		use:startEnhance
-	>
+	<form method="POST" action="?/start" class="ml-auto" use:startEnhance>
 		<button
 			class="fixed bottom-6 right-6 ease-out transition-all z-20 h-14 w-14 rounded-full bg-primary-500/80 dark:bg-primary-600/80 text-base-50 backdrop-blur-sm shadow-xl grid place-items-center sm:hidden"
 			use:tippy={{ content: 'Create a room', placement: 'left' }}

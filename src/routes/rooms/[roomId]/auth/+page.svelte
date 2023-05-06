@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fadeScale } from '$lib/utils/fadeScale'
 	import { scale } from 'svelte/transition'
 	import { ChevronLeft, Eye, EyeOff } from 'lucide-svelte'
 	import { onMount } from 'svelte'
@@ -31,12 +32,13 @@
 <form
 	method="POST"
 	use:enhance
+	in:fadeScale={{ baseScale: 0.8 }}
 	class="mx-auto w-full border rounded-3xl dark:border-base-900 border-base-300 p-6 grid gap-6 sm:w-96"
 >
 	<h2 class="w-full text-center text-xl font-semibold">
 		This room is private, enter password to continue
 	</h2>
-	<fieldset in:scale={{ start: 0.8 }} class="grid gap-1">
+	<fieldset class="grid gap-1">
 		<div
 			class="flex w-full items-center data-[invalid]:ring-red-500 hover:ring-primary-500 dark:hover:ring-primary-600 rounded-lg overflow-hidden ring-1 ring-transparent duration-200 focus-within:ring-primary-500 dark:focus-within:ring-primary-600 bg-base-200 dark:bg-base-900 pr-2"
 			data-invalid={$errors.password}

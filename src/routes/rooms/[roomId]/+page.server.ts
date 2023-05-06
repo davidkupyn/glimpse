@@ -32,7 +32,9 @@ export const load = async ({ locals, params, url }) => {
 	)
 		throw redirect(303, `/rooms/${params.roomId}/auth`)
 	const options = room.expand['options(room)']
-
+	if (room.started && !room.winner) {
+		throw redirect(303, `/rooms/${params.roomId}/vote`)
+	}
 	return {
 		room,
 		options,
