@@ -8,7 +8,7 @@
 	import { tippy } from '$lib/actions/tippy'
 	import { onMount } from 'svelte'
 	import { currentUser, pb } from '$lib/pocketbase.js'
-	import { invalidate } from '$app/navigation'
+	import { invalidate, invalidateAll } from '$app/navigation'
 	import { superForm } from 'sveltekit-superforms/client'
 	import { flip } from 'svelte/animate'
 	import { cubicOut } from 'svelte/easing'
@@ -69,7 +69,7 @@
 
 	onMount(async () => {
 		const unsubscribe = await pb.collection('options').subscribe('*', (subscription) => {
-			invalidate('room')
+			if (subscription.action === 'create') invalidateAll()
 		})
 
 		return () => unsubscribe()
