@@ -8,7 +8,7 @@
 	import { tippy } from '$lib/actions/tippy'
 	import { onMount } from 'svelte'
 	import { currentUser, pb } from '$lib/pocketbase.js'
-	import { invalidate, invalidateAll } from '$app/navigation'
+	import { invalidate } from '$app/navigation'
 	import { superForm } from 'sveltekit-superforms/client'
 	import { flip } from 'svelte/animate'
 	import { cubicOut } from 'svelte/easing'
@@ -68,13 +68,20 @@
 	}
 
 	onMount(async () => {
-		const unsubscribe = await pb.collection('options').subscribe('*', (subscription) => {
-			console.log('options changed')
-			if (subscription.action === 'create') console.log('new option')
-			invalidateAll()
+		const unsubscribeFromOptions = await pb.collection('options').subscribe('*', (subscription) => {
+			if (subscription.action === 'create' && subscription.record.room === data.room.id)
+				invalidate('room')
 		})
+		const unsubscribeFromCurrentRoom = await pb
+			.collection('rooms')
+			.subscribe(data.room.id, (subscription) => {
+				invalidate('room')
+			})
 
-		return () => unsubscribe()
+		return () => {
+			unsubscribeFromOptions()
+			unsubscribeFromCurrentRoom()
+		}
 	})
 </script>
 
@@ -88,7 +95,7 @@
 		<ChevronLeft size={20} />
 	</a>
 	<h1 class="text-2xl font-bold md:text-3xl">{data.room?.title}</h1>
-	<div class="flex gap-2">
+	<div class="flex gap-2 items-center">
 		<div class="relative">
 			<button
 				on:click={qrDialog.open}
@@ -124,7 +131,13 @@
 				</span>
 			{/if}
 		</button>
-		<span>{data.room.participants.length}</span>
+		<span
+			aria-label="Participants"
+			use:tippy={{ content: 'Participants', placement: 'bottom' }}
+			class="rounded-full tabular-nums bg-primary-500/10 dark:bg-primary-500/20 border border-primary-500 text-primary-600 dark:text-primary-300 px-2 py-1 min-w-[1.5rem] text-center text-xs"
+		>
+			{data.room.participants.length}
+		</span>
 	</div>
 	{#if !data.room.started && data.room.creator === $currentUser?.id}
 		<form
