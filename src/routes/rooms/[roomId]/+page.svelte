@@ -69,6 +69,8 @@
 
 	onMount(async () => {
 		const unsubscribe = await pb.collection('options').subscribe('*', (subscription) => {
+			console.log('options changed')
+			if (subscription.action === 'create') console.log('new option')
 			invalidateAll()
 		})
 
