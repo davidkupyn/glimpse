@@ -214,7 +214,7 @@
 			class="grid gap-3 w-full"
 			transition:fly|local={{ x: -200, easing: cubicOut, duration: 150 }}
 		>
-			<form action="?/createOption" method="POST" use:enhance class="w-full grid gap-6">
+			<form action="?/createOption" method="POST" use:enhance class="w-full flex flex-col gap-6">
 				<h2 class="font-semibold text-xl">Submit your option</h2>
 				<div
 					class="bg-base-200 transition dark:bg-base-900 rounded-lg data-[invalid]:ring-red-500 dark:focus-within:ring-primary-600 focus-within:ring-primary-500 ring-1 ring-transparent hover:ring-primary-500 dark:hover:ring-primary-600 px-4"
