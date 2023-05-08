@@ -77,13 +77,21 @@
 			})
 		}
 	}
-
+	let debounceTimeout: NodeJS.Timeout
 	onMount(async () => {
 		const unsubscribeFromOptions = await pb.collection('options').subscribe('*', (subscription) => {
-			if (subscription.record.room === data.room.id) invalidate('room')
+			if (subscription.record.room === data.room.id) {
+				clearTimeout(debounceTimeout)
+				debounceTimeout = setTimeout(() => {
+					invalidate('room')
+				}, 400)
+			}
 		})
 		const unsubscribeFromCurrentRoom = await pb.collection('rooms').subscribe(data.room.id, () => {
-			invalidate('room')
+			clearTimeout(debounceTimeout)
+			debounceTimeout = setTimeout(() => {
+				invalidate('room')
+			}, 400)
 		})
 
 		return () => {
