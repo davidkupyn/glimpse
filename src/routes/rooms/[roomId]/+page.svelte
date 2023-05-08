@@ -16,7 +16,10 @@
 
 	export let data
 
-	const { form, errors, enhance, capture, restore } = superForm(data.form)
+	const { form, errors, capture, restore, enhance } = superForm(data.form, {
+		invalidateAll: false,
+		applyAction: false
+	})
 	const { enhance: joinEnhance } = superForm(data.joinForm, {
 		taintedMessage: null
 	})
@@ -79,18 +82,15 @@
 		const unsubscribeFromOptions = await pb.collection('options').subscribe('*', (subscription) => {
 			if (subscription.record.room === data.room.id) invalidate('room')
 		})
-		const unsubscribeFromCurrentRoom = await pb
-			.collection('rooms')
-			.subscribe(data.room.id, (subscription) => {
-				invalidate('room')
-			})
+		const unsubscribeFromCurrentRoom = await pb.collection('rooms').subscribe(data.room.id, () => {
+			invalidate('room')
+		})
 
 		return () => {
 			unsubscribeFromOptions()
 			unsubscribeFromCurrentRoom()
 		}
 	})
-
 	$: options = data.room.winner
 		? data.options.sort(
 				(a: { votes: string[] }, b: { votes: string[] }) => b.votes.length - a.votes.length
@@ -105,7 +105,6 @@
 	{/if}
 	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
 </svelte:head>
-
 <div class="flex max-sm:flex-col gap-5 items-center mb-6 md:mb-8">
 	<div class="flex items-center gap-5 max-sm:w-full">
 		<a
@@ -116,6 +115,13 @@
 		>
 			<ChevronLeft size={20} />
 		</a>
+		<button
+			on:click={() => {
+				invalidate('room')
+			}}
+		>
+			refresh
+		</button>
 		<div class="items-center flex">
 			<h1 class="text-2xl font-bold md:text-3xl">{data.room.title}</h1>
 			<span
