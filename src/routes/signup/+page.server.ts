@@ -16,7 +16,7 @@ export async function load({ locals }) {
 }
 
 export const actions = {
-	default: async ({ locals, request }) => {
+	default: async ({ locals, request, url }) => {
 		const form = await superValidate(request, schema)
 		if (!form.valid) {
 			return fail(400, { form })
@@ -37,6 +37,6 @@ export const actions = {
 			return setError(form, 'email', 'User already exists')
 		}
 
-		throw redirect(303, '/rooms')
+		throw redirect(303, url.searchParams.get('redirect') || '/rooms')
 	}
 }
