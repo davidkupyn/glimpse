@@ -62,7 +62,7 @@
 				in:fade={{ duration: 400 }}
 				class="text-center bg-clip-text text-transparent bg-gradient-to-t from-base-700 to-base-500 dark:from-base-400 dark:to-base-50 md:text-lg"
 			>
-				Predict the future of the world with Glimpse without waiting for 10 years.
+				Organize and make decisions without waiting for 10 years with Glimpse.
 			</p>
 			<a
 				in:fade={{ duration: 400 }}
