@@ -4,7 +4,7 @@
 	export let votes = 0
 	export let total = 0
 
-	$: percentage = Math.round((votes / total) * 100)
+	$: percentage = Math.round((votes / total) * 100) || 0
 
 	const tweenedPercentage = tweened(0, {
 		duration: 300,

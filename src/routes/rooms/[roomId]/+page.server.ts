@@ -38,8 +38,9 @@ export const load = async ({ locals, params, url, depends }) => {
 		throw redirect(303, `/rooms/${params.roomId}/auth`)
 	const options = room.expand['options(room)']
 	const totalVotes = options
-		? options.reduce((acc: number, { votes }: { votes: string[] }) => acc + votes.length, 0)
+		? options.reduce((acc: number, { votes }: { votes: string[] }) => acc + votes.length, 0) ?? 0
 		: 0
+	console.log(totalVotes)
 	return {
 		room,
 		options,

@@ -90,6 +90,12 @@
 			unsubscribeFromCurrentRoom()
 		}
 	})
+
+	$: options = data.room.winner
+		? data.options.sort(
+				(a: { votes: string[] }, b: { votes: string[] }) => b.votes.length - a.votes.length
+		  )
+		: data.options
 </script>
 
 <svelte:head>
@@ -256,11 +262,11 @@
 	{/if}
 	<div class="flex flex-col gap-3 w-full md:mt-[3.25rem]">
 		{#if !!data.options}
-			{#each data.options as option, i (option.id)}
+			{#each options as option, i (option.id)}
 				<form
 					method="POST"
 					use:voteEnhance
-					animate:flip
+					animate:flip={{ duration: 200, easing: cubicOut }}
 					in:fly={{ y: 100, easing: cubicOut, delay: 25 * i }}
 				>
 					<button
