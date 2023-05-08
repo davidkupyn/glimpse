@@ -74,8 +74,7 @@
 
 	onMount(async () => {
 		const unsubscribeFromOptions = await pb.collection('options').subscribe('*', (subscription) => {
-			if (subscription.action === 'create' && subscription.record.room === data.room.id)
-				invalidate('room')
+			if (subscription.record.room === data.room.id) invalidate('room')
 		})
 		const unsubscribeFromCurrentRoom = await pb
 			.collection('rooms')
