@@ -6,6 +6,7 @@
 	import { onMount } from 'svelte'
 	import { applyAction, enhance } from '$app/forms'
 	import { pb } from '$lib/pocketbase.js'
+	import { page } from '$app/stores'
 	export let data
 
 	const { form, errors } = superForm(data.form)
@@ -28,6 +29,8 @@
 	$: {
 		if (mounted) passwordInput.type = showPassword ? 'text' : 'password'
 	}
+
+	$: redirect = $page.url.searchParams.get('redirect') || '/rooms'
 </script>
 
 <main
@@ -125,7 +128,7 @@
 		<div class="w-full flex justify-center items-center text-sm gap-1">
 			Don't have an account?
 			<a
-				href="/signup"
+				href="/signup?redirect={redirect}"
 				class="inline-flex group items-center transition justify-center text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 ring-offset-base-50 dark:ring-offset-base-950 rounded px-1 disabled:opacity-50 disabled:pointer-events-none"
 			>
 				<span
