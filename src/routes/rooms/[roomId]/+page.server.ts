@@ -40,7 +40,6 @@ export const load = async ({ locals, params, url, depends }) => {
 	const totalVotes = options
 		? options.reduce((acc: number, { votes }: { votes: string[] }) => acc + votes.length, 0) ?? 0
 		: 0
-	console.log(totalVotes)
 	return {
 		room,
 		options,
@@ -151,18 +150,10 @@ export const actions = {
 				.map(({ votes }: { votes: string[] }) => votes.length)
 				.reduce((partialSum: number, a: number) => partialSum + a, 0) + 1
 		const allParticipantsVoted = votesCount === room.participants.length
-		console.log(allParticipantsVoted)
 		if (allParticipantsVoted) {
-			const winner = options.reduce(
-				(
-					prev: {
-						votes: string[]
-					},
-					curr: {
-						votes: string[]
-					}
-				) => (prev.votes.length > curr.votes.length ? prev : curr)
-			)
+			const winner = options.sort(
+				(a: { votes: string[] }, b: { votes: string[] }) => b.votes.length - a.votes.length
+			)[0]
 			await locals.pb.collection('rooms').update(params.roomId, {
 				winner: winner.id
 			})

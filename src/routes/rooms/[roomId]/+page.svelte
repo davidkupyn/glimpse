@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores'
 	import { Check, ChevronLeft, Link, Play, QrCode as QrCodeIcon } from 'lucide-svelte'
-	import { fade, fly, scale } from 'svelte/transition'
+	import { fly, scale } from 'svelte/transition'
 	import { createDialog } from 'svelte-headlessui'
 	import { qr } from '$lib/utils/qr-generator'
 	import Transition from 'svelte-transition'
