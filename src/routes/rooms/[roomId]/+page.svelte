@@ -115,13 +115,6 @@
 		>
 			<ChevronLeft size={20} />
 		</a>
-		<button
-			on:click={() => {
-				invalidate('room')
-			}}
-		>
-			refresh
-		</button>
 		<div class="items-center flex">
 			<h1 class="text-2xl font-bold md:text-3xl">{data.room.title}</h1>
 			<span
