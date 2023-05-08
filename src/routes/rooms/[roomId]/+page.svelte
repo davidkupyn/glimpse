@@ -16,10 +16,13 @@
 
 	export let data
 
-	const { form, errors, enhance } = superForm(data.form)
+	const { form, errors, enhance, capture, restore } = superForm(data.form)
 	const { enhance: joinEnhance } = superForm(data.joinForm, {
 		taintedMessage: null
 	})
+
+	export const snapshot = { capture, restore }
+
 	const { enhance: leaveEnhance } = superForm(data.leaveForm, {
 		taintedMessage: null
 	})
@@ -266,9 +269,8 @@
 					>
 						<p>{option.content}</p>
 						{#if data.room.started}
-							<VotePercentage total={data.room.participants.length} votes={option.votes.length} />
+							<VotePercentage total={data.totalVotes} votes={option.votes.length} />
 						{/if}
-
 						{#if option.description}
 							<p class="text-base-400 dark:text-base-500">{option.description}</p>
 						{/if}

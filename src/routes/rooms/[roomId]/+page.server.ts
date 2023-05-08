@@ -37,7 +37,9 @@ export const load = async ({ locals, params, url, depends }) => {
 	if (room.private && room.password !== password && !room.winner && !isCreator)
 		throw redirect(303, `/rooms/${params.roomId}/auth`)
 	const options = room.expand['options(room)']
-
+	const totalVotes = options
+		? options.reduce((acc: number, { votes }: { votes: string[] }) => acc + votes.length, 0)
+		: 0
 	return {
 		room,
 		options,
@@ -46,6 +48,7 @@ export const load = async ({ locals, params, url, depends }) => {
 		leaveForm,
 		startForm,
 		voteForm,
+		totalVotes,
 		joined: room.participants.includes(locals?.user?.id),
 		enteredOption:
 			options && !!options?.some(({ author }: { author: string }) => author === locals?.user?.id)
