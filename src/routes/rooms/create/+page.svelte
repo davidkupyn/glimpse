@@ -29,10 +29,6 @@
 		if (mounted && passwordInput) passwordInput.type = showPassword ? 'text' : 'password'
 	}
 	$: $form.private = privateRoom ? 1 : 0
-
-	$: {
-		console.log($errors)
-	}
 </script>
 
 <a

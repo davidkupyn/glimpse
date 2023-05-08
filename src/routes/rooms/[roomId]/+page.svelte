@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores'
 	import { Check, ChevronLeft, Link, Play, QrCode as QrCodeIcon } from 'lucide-svelte'
-	import { fly, scale } from 'svelte/transition'
+	import { fade, fly, scale } from 'svelte/transition'
 	import { createDialog } from 'svelte-headlessui'
 	import { qr } from '$lib/utils/qr-generator'
 	import Transition from 'svelte-transition'
@@ -12,6 +12,7 @@
 	import { superForm } from 'sveltekit-superforms/client'
 	import { flip } from 'svelte/animate'
 	import { cubicOut } from 'svelte/easing'
+	import VotePercentage from '$lib/components/vote-percentage.svelte'
 
 	export let data
 
@@ -23,6 +24,10 @@
 		taintedMessage: null
 	})
 	const { enhance: startEnhance } = superForm(data.startForm, {
+		taintedMessage: null
+	})
+
+	const { enhance: voteEnhance } = superForm(data.voteForm, {
 		taintedMessage: null
 	})
 
@@ -85,76 +90,108 @@
 	})
 </script>
 
-<div class="flex gap-6 items-center mb-6 md:mb-8">
-	<a
-		aria-label="Go back"
-		use:tippy={{ content: 'Go back', delay: 500, placement: 'bottom' }}
-		class="inline-flex items-center p-2 focus-visible:text-base-900 dark:focus-visible:text-base-100 text-base-500 dark:text-base-400 justify-center dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 outline-none hover:text-base-800 dark:hover:text-base-100 transition-colors text-sm hover:bg-base-200/50 dark:hover:bg-base-900 rounded-lg"
-		href="/rooms"
-	>
-		<ChevronLeft size={20} />
-	</a>
-	<h1 class="text-2xl font-bold md:text-3xl">{data.room?.title}</h1>
-	<div class="flex gap-2 items-center">
-		<div class="relative">
-			<button
-				on:click={qrDialog.open}
-				use:tippy={{ content: 'Show QR Code', placement: 'bottom' }}
-				aria-label="Go back"
-				class="inline-flex items-center p-2 focus-visible:text-base-900 dark:focus-visible:text-base-100 text-base-500 dark:text-base-400 justify-center dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 outline-none hover:text-base-800 dark:hover:text-base-100 transition-colors text-sm hover:bg-base-200/50 dark:hover:bg-base-900 rounded-lg"
+<svelte:head>
+	<title>{data.room.title}</title>
+	{#if data.room.description}
+		<meta name="description" content={data.room.description} />
+	{/if}
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+</svelte:head>
+
+<div class="flex max-sm:flex-col gap-5 items-center mb-6 md:mb-8">
+	<div class="flex items-center gap-5 max-sm:w-full">
+		<a
+			aria-label="Go back"
+			use:tippy={{ content: 'Go back', delay: 500, placement: 'bottom' }}
+			class="inline-flex items-center p-2 focus-visible:text-base-900 dark:focus-visible:text-base-100 text-base-500 dark:text-base-400 justify-center dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 outline-none hover:text-base-800 dark:hover:text-base-100 transition-colors text-sm hover:bg-base-200/50 dark:hover:bg-base-900 rounded-lg"
+			href="/rooms"
+		>
+			<ChevronLeft size={20} />
+		</a>
+		<div class="items-center flex">
+			<h1 class="text-2xl font-bold md:text-3xl">{data.room.title}</h1>
+			<span
+				aria-label="Participants"
+				use:tippy={{ content: 'Participants', placement: 'bottom' }}
+				class="rounded-full ml-5 tabular-nums bg-primary-500/10 dark:bg-primary-500/20 border border-primary-500 text-primary-600 dark:text-primary-300 px-2 py-1 min-w-[1.5rem] text-center text-xs"
 			>
-				<span in:scale>
-					<QrCodeIcon size={20} />
-				</span>
+				{data.room.participants.length}
+			</span>
+		</div>
+	</div>
+	<div class="flex items-center gap-5 w-full">
+		<div class="flex gap-3 items-center">
+			<div class="relative">
+				<button
+					on:click={qrDialog.open}
+					use:tippy={{ content: 'Show QR Code', placement: 'bottom' }}
+					aria-label="Go back"
+					class="inline-flex items-center p-2 focus-visible:text-base-900 dark:focus-visible:text-base-100 text-base-500 dark:text-base-400 justify-center dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 outline-none hover:text-base-800 dark:hover:text-base-100 transition-colors text-sm hover:bg-base-200/50 dark:hover:bg-base-900 rounded-lg"
+				>
+					<span in:scale>
+						<QrCodeIcon size={20} />
+					</span>
+				</button>
+			</div>
+			<button
+				aria-label="Copy URL"
+				use:tippy={{ content: 'Copy URL', placement: 'bottom' }}
+				class="inline-flex items-center p-2 focus-visible:text-base-900 dark:focus-visible:text-base-100 text-base-500 dark:text-base-400 justify-center dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 outline-none hover:text-base-800 dark:hover:text-base-100 transition-colors text-sm hover:bg-base-200/50 dark:hover:bg-base-900 rounded-lg"
+				on:click={() => {
+					if (copiedURL) return
+					copiedURL = true
+					navigator.clipboard.writeText($page.url.href)
+					setTimeout(() => {
+						copiedURL = false
+					}, 1000)
+				}}
+			>
+				{#if copiedURL}
+					<span in:scale>
+						<Check class="text-green-600 dark:text-green-500" size={20} />
+					</span>
+				{:else}
+					<span in:scale>
+						<Link size={20} />
+					</span>
+				{/if}
 			</button>
 		</div>
-		<button
-			aria-label="Copy URL"
-			use:tippy={{ content: 'Copy URL', placement: 'bottom' }}
-			class="inline-flex items-center p-2 focus-visible:text-base-900 dark:focus-visible:text-base-100 text-base-500 dark:text-base-400 justify-center dark:focus-visible:bg-base-900 focus-visible:bg-base-200/50 outline-none hover:text-base-800 dark:hover:text-base-100 transition-colors text-sm hover:bg-base-200/50 dark:hover:bg-base-900 rounded-lg"
-			on:click={() => {
-				if (copiedURL) return
-				copiedURL = true
-				navigator.clipboard.writeText($page.url.href)
-				setTimeout(() => {
-					copiedURL = false
-				}, 1000)
-			}}
-		>
-			{#if copiedURL}
-				<span in:scale>
-					<Check class="text-green-600 dark:text-green-500" size={20} />
-				</span>
-			{:else}
-				<span in:scale>
-					<Link size={20} />
-				</span>
-			{/if}
-		</button>
-		<span
-			aria-label="Participants"
-			use:tippy={{ content: 'Participants', placement: 'bottom' }}
-			class="rounded-full tabular-nums bg-primary-500/10 dark:bg-primary-500/20 border border-primary-500 text-primary-600 dark:text-primary-300 px-2 py-1 min-w-[1.5rem] text-center text-xs"
-		>
-			{data.room.participants.length}
-		</span>
-	</div>
-	{#if !data.room.started && data.room.creator === $currentUser?.id}
-		<form
-			transition:scale|local={{ duration: 150, easing: cubicOut }}
-			method="POST"
-			action="?/start"
-			class="ml-auto"
-			use:startEnhance
-		>
-			<button
-				class="max-sm:hidden inline-flex items-center h-10 py-2 group px-4 transition-all text-base-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-base-50 dark:ring-offset-base-950 bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
+		{#if !data.room.started && data.room.creator === $currentUser?.id}
+			<form
+				transition:scale|local={{ duration: 150, easing: cubicOut }}
+				method="POST"
+				action="?/start"
+				class="ml-auto"
+				use:startEnhance
 			>
-				<Play class="w-4 h-4 mr-2 transition" size={16} />
-				Start voting
-			</button>
-		</form>
-	{/if}
+				<button
+					class="max-sm:hidden inline-flex items-center h-10 py-2 group px-4 transition-all text-base-50 justify-center rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 ring-primary-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-base-50 dark:ring-offset-base-950 bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
+				>
+					<Play class="w-4 h-4 mr-2 transition" size={16} />
+					Start voting
+				</button>
+			</form>
+		{:else if data.room.started && !data.room.winner}
+			<span
+				class="ml-auto rounded-full tabular-nums bg-primary-500/10 dark:bg-primary-500/20 border border-primary-500 text-primary-600 dark:text-primary-300 px-2 py-1 min-w-[1.5rem] text-center text-xs"
+			>
+				Started
+			</span>
+		{:else if data.room.winner}
+			<span
+				class="ml-auto rounded-full tabular-nums bg-primary-500/10 dark:bg-primary-500/20 border border-primary-500 text-primary-600 dark:text-primary-300 px-2 py-1 min-w-[1.5rem] text-center text-xs"
+			>
+				Finished
+			</span>
+		{:else}
+			<span
+				class="ml-auto rounded-full tabular-nums bg-primary-500/10 dark:bg-primary-500/20 border border-primary-500 text-primary-600 dark:text-primary-300 px-2 py-1 min-w-[1.5rem] text-center text-xs"
+			>
+				Not started yet
+			</span>
+		{/if}
+	</div>
 </div>
 <div class="flex flex-col md:flex-row gap-12">
 	{#if data.joined && !data.enteredOption && !data.room.started}
@@ -218,16 +255,26 @@
 	<div class="flex flex-col gap-3 w-full md:mt-[3.25rem]">
 		{#if !!data.options}
 			{#each data.options as option, i (option.id)}
-				<div
+				<form
+					method="POST"
+					use:voteEnhance
 					animate:flip
 					in:fly={{ y: 100, easing: cubicOut, delay: 25 * i }}
-					class="border outline-none w-full focus-visible:bg-base-200 dark:focus-visible:bg-base-900 dark:focus-visible:text-base-50 focus-visible:text-base-800 border-base-300 dark:border-base-900 rounded-lg p-4 flex flex-col gap-2 dark:hover:bg-base-900 hover:bg-base-100 hover:text-base-800 dark:hover:text-base-50 dark:text-base-300 text-base-600 transition"
 				>
-					<p>{option.content}</p>
-					{#if option.description}
-						<p class="text-base-400 dark:text-base-500">{option.description}</p>
-					{/if}
-				</div>
+					<button
+						formaction="?/vote&option={option.id}"
+						class="border overflow-hidden relative outline-none w-full focus-visible:bg-base-200 dark:focus-visible:bg-base-900 dark:focus-visible:text-base-50 focus-visible:text-base-800 border-base-300 dark:border-base-900 rounded-lg p-4 flex flex-col gap-2 dark:hover:bg-base-900 hover:bg-base-100 hover:text-base-800 dark:hover:text-base-50 dark:text-base-300 text-base-600 transition"
+					>
+						<p>{option.content}</p>
+						{#if data.room.started}
+							<VotePercentage total={data.room.participants.length} votes={option.votes.length} />
+						{/if}
+
+						{#if option.description}
+							<p class="text-base-400 dark:text-base-500">{option.description}</p>
+						{/if}
+					</button>
+				</form>
 			{/each}
 		{:else}
 			<p class="w-full text-center my-8 font-medium">No options yet</p>

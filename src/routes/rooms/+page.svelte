@@ -34,7 +34,7 @@
 
 <div class="flex max-sm:flex-col sm:items-center justify-between gap-4 w-full mb-6 md:mb-8">
 	<div class="flex items-center gap-4">
-		<h1 class="text-2xl font-bold md:text-3xl">Rooms</h1>
+		<h1 in:scale={{ duration: 200, start: 0.9 }} class="text-2xl font-bold md:text-3xl">Rooms</h1>
 		<button
 			aria-label="Refresh data"
 			on:click={() => {
@@ -89,7 +89,7 @@
 	{#each data.rooms.filter((room) => roomsFilter === 'all' || (roomsFilter === 'live' && !room.winner) || (roomsFilter === 'finished' && !!room.winner)) as room, i (room)}
 		<a
 			in:fly={{ y: 100, easing: cubicOut, delay: 25 * i }}
-			href="/rooms/{room.id + (!!room.winner ? '/results' : '')}"
+			href="/rooms/{room.id}"
 			class="border gap-2 outline-none focus-visible:bg-base-200 dark:focus-visible:bg-base-900 dark:focus-visible:text-base-50 focus-visible:text-base-800 border-base-300 dark:border-base-900 rounded-lg p-4 h-20 w-full flex items-center dark:hover:bg-base-900 hover:bg-base-100 hover:text-base-800 dark:hover:text-base-50 dark:text-base-300 text-base-600 transition"
 		>
 			{#if room.creator === $currentUser?.id}
